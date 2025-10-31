@@ -2,29 +2,20 @@ name: Daily Job Scrape
 
 on:
   schedule:
-    - cron: '30 10 * * *'  # 4:00 PM IST daily
-  workflow_dispatch:       # Manual run button
+    - cron: '30 10 * * *'
+  workflow_dispatch:
 
 jobs:
   scrape:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Set up Python
-        uses: actions/setup-python@v4
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v4
         with:
           python-version: '3.11'
-
-      - name: Install dependencies
-        run: pip install -r requirements.txt
-
-      - name: Run scraper
-        run: python scraper.py
-
-      - name: Upload CSV
-        uses: actions/upload-artifact@v4
+      - run: pip install requests beautifulsoup4 pandas
+      - run: python scraper.py
+      - uses: actions/upload-artifact@v4
         with:
           name: jobs-csv
-          path: "*.csv"
+          path: jobs_output.csv  # Fixed name
